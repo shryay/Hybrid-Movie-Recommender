@@ -7,6 +7,7 @@ import numpy as np
 import pandas as pd
 from scipy import sparse
 from sklearn.metrics.pairwise import cosine_similarity
+from sklearn.feature_extraction.text import TfidfVectorizer
 from functions import *
 
 st.header('Personalized Movie Recommendations')
@@ -16,7 +17,14 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 df_content = pd.read_csv(os.path.join(BASE_DIR, 'clean_content.csv'))
 df_user = pd.read_csv(os.path.join(BASE_DIR, 'ratings_title.csv'))
 df_user.rename(columns={'userId':'user_id', 'movieId':'movie_id'}, inplace=True)
-content_similarity = pickle.load(open(os.path.join(BASE_DIR, '../data/movie_similarity_matrix.pkl'), 'rb'))
+
+@st.cache_resource
+def calculate_cosine_similarity(df):
+    tfidf = TfidfVectorizer(stop_words='english')
+    tfidf_matrix = tfidf.fit_transform(df['body'].fillna(''))
+    return cosine_similarity(tfidf_matrix, tfidf_matrix)
+
+content_similarity = calculate_cosine_similarity(df_content)
 df_content_sim = pd.DataFrame(content_similarity, index = df_content['title'].values, columns= df_content['title'].values)
 
 
