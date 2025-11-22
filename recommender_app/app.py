@@ -1,5 +1,6 @@
 from hashlib import new
 from ssl import Options
+import os
 import streamlit as st
 import pickle
 import numpy as np
@@ -11,10 +12,11 @@ from functions import *
 st.header('Personalized Movie Recommendations')
 
 #Data imports
-df_content = pd.read_csv('clean_content.csv')
-df_user = pd.read_csv('ratings_title.csv')
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+df_content = pd.read_csv(os.path.join(BASE_DIR, 'clean_content.csv'))
+df_user = pd.read_csv(os.path.join(BASE_DIR, 'ratings_title.csv'))
 df_user.rename(columns={'userId':'user_id', 'movieId':'movie_id'}, inplace=True)
-content_similarity = pickle.load(open('movie_similarity_matrix.pkl', 'rb'))
+content_similarity = pickle.load(open(os.path.join(BASE_DIR, '../data/movie_similarity_matrix.pkl'), 'rb'))
 df_content_sim = pd.DataFrame(content_similarity, index = df_content['title'].values, columns= df_content['title'].values)
 
 
@@ -25,8 +27,8 @@ number = int(st.number_input('How many movies would you like to rate?', min_valu
 current_line_number = 0
 options = df_content['title'].values.tolist()
 for _ in range(number):
-    movie = st.selectbox('Movie title',key=str(current_line_number), options=options)
-    rating = st.select_slider('Rate the movie',options=[0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5], key=str(current_line_number))
+    movie = st.selectbox('Movie title',key=str(current_line_number) + '_movie', options=options)
+    rating = st.select_slider('Rate the movie',options=[0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5], key=str(current_line_number) + '_rating')
     new_user_data.append((movie,rating))
     current_line_number += 1
 
@@ -76,7 +78,7 @@ if st.button('Get Recommendations'):
         #Filter the list of movies by like/dislike based on user's rating
         user_movies = []
         for movie in user_watched_movies:
-            if df_current_user[df_current_user['title'] == movie]['rating'].values >= user_mean_rating:
+            if df_current_user[df_current_user['title'] == movie]['rating'].values[0] >= user_mean_rating:
                 user_movies.append(movie)
             
         #Create an empty dataframe to store movie recommendations for each movie seen by the user
@@ -85,7 +87,7 @@ if st.button('Get Recommendations'):
         for movie in user_movies:
             #Add similarity score for each movie with user_movie
             #Remove movies that the user has already seen
-            similar_movies = similar_movies.append(df_content_sim[movie].drop(user_watched_movies))
+            similar_movies = pd.concat([similar_movies, df_content_sim[movie].drop(user_watched_movies)])
         #Add the similarity score of each movie and select the movies with high scores
         content_rec = pd.DataFrame(similar_movies.sum()).reset_index().rename(columns={'index': 'title',
                         0: 'content_similarity'})
