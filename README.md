@@ -1,5 +1,5 @@
 # Hybrid-Movie-Recommender   
-#### Ankita Patil
+#### Shreya Upadhyay
 ---
 ## Executive Summary
 
@@ -25,11 +25,11 @@ Given a database of users and their movie ratings, can we build a recommender th
 
 ### Data Exploration 
 
-![](https://github.com/ankitadpatil/Hybrid-Movie-Recommender/blob/main/images/ratings.png)
-![](https://github.com/ankitadpatil/Hybrid-Movie-Recommender/blob/main/images/average_rating.png)
-![](https://github.com/ankitadpatil/Hybrid-Movie-Recommender/blob/main/images/genre_popularity.png)
-![](https://github.com/ankitadpatil/Hybrid-Movie-Recommender/blob/main/images/genre_ratings.png)
-![](https://github.com/ankitadpatil/Hybrid-Movie-Recommender/blob/main/images/ratings_per_movie.png)
+![](https://github.com/shryay/Hybrid-Movie-Recommender/blob/main/images/ratings.png)
+![](https://github.com/shryay/Hybrid-Movie-Recommender/blob/main/images/average_rating.png)
+![](https://github.com/shryay/Hybrid-Movie-Recommender/blob/main/images/genre_popularity.png)
+![](https://github.com/shryay/Hybrid-Movie-Recommender/blob/main/images/genre_ratings.png)
+![](https://github.com/shryay/Hybrid-Movie-Recommender/blob/main/images/ratings_per_movie.png)
 
 ### Approach
 
@@ -48,12 +48,12 @@ Recommender systems are used to predict a user's rating on an unseen item and re
 
 **Cosine Similarity** - Cosine similarity is a metric to measure similarity between two vectors. Smaller the angle between the two vectors, larger the similarity between the two. Similarity between two movies or two users can be quantified using cosine similarity. If we consider movies and users as vectors where features form dimensions of the vectors, the cosine of angle between these two vectors (movies/users) gives similarity between the two movies or two users. The mathematical formula for calculating cosine similarity is -
 
-![](https://github.com/ankitadpatil/Hybrid-Movie-Recommender/blob/main/images/CosineSimilarity.png)
+![](https://github.com/shryay/Hybrid-Movie-Recommender/blob/main/images/CosineSimilarity.png)
 
 **TF-IDF (Term Frequency - Inverse Document Frequency)** is a measure of how relevant a word is to a document in a collection of documents. TF-IDF caluculates frequency of a word in a document and in a collection of documents. The rank of every word is directly proportional to its frequency in the document, but inversely proportional to its frequency across multiple documents. So if a word is very common and appears in the context of many movies, it is ranked lower and if the word appears in the context of only one movie, it is ranked higher. TF-IDF is primarily used to convert text into numbers. 
 
 3. **Collaborative Recommender**:
-- A memory-based collaborative recommender filters information based on other users' interactions. The core idea behind collaborative filtering is that people (users) that share interests (similar ratings) on certain things (items) are more likely to share interests on other things (other items). There are two types of collaborative filtering:
+- A memory-based collaborative recommender filters information based on other users' interactions. The core idea behind collaborative filtering is that people (users) that share interests (similar ratings) on certain things (items) are more likely to share interests (similar ratings) on other things (other items). There are two types of collaborative filtering:
   * **User-Based Approach** - It uses ratings given by all the users (user behavior) to find similarity between the users. It then finds users similar to the target user, sorts these users by similarity scores. It then makes recommendations based on these user' interactions. You can see user-based collaborative filtering at work when you come across `because you watched this we recommend you something (a list)`.
   * **Item-based Approach** - It uses ratings given by all the users (user behavior) to find similarity between the items instead of users. It then finds items similar to the items watched by the target user and recommends items by similarity score. You can see item-based collaborative filtering approach being implemented when you come across `people who liked this also liked something (a list)`.
 - Both approaches work on user-item interactions matrix and have an advantage based on the scenarios in which they are used. User-based approach is implemented in the project as number of users is less than number of movies (items). This saves computation time and power required to create a user-user interaction matrix. Item-based approach is used when number of items are less than number of users, and less computation time and power is available to create an item-item interaction matrix.
